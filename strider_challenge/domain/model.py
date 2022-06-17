@@ -15,7 +15,14 @@ class Author(SQLModel, table=True):
 
 
 def build_author(author_raw: raw.AuthorRaw) -> Author:
-    pass
+    return Author(
+        name=author_raw.metadata.name,
+        birth_date=author_raw.metadata.birth_date,
+        died_at=author_raw.metadata.died_at,
+        nationalities=[
+            n.slug for n in author_raw.nationalities if n.slug not in ["", None]
+        ],
+    )
 
 
 class Book(SQLModel, table=True):
@@ -26,7 +33,12 @@ class Book(SQLModel, table=True):
 
 
 def build_book(book_raw: raw.BookRaw) -> Book:
-    pass
+    return Book(
+        title=book_raw.name,
+        pages=book_raw.pages,
+        author=book_raw.author,
+        publisher=book_raw.publisher,
+    )
 
 
 class Review(SQLModel, table=True):
@@ -44,7 +56,16 @@ class Review(SQLModel, table=True):
 
 
 def build_review(review_raw: raw.ReviewRaw) -> Review:
-    pass
+    return Review(
+        text=review_raw.content.text,
+        rating=review_raw.rating.rate,
+        movie_title=[
+            movie.title
+            for movie in review_raw.movies
+            if movie.title not in [None, "", "end"]
+        ].pop(),
+        book_title=[book.metadata.title for book in review_raw.books][:1].pop(),
+    )
 
 
 class User(SQLModel, table=True):
@@ -60,7 +81,7 @@ class Movie(SQLModel, table=True):
     size_mb: int
 
 
-class Streams(SQLModel, table=True):
+class Stream(SQLModel, table=True):
     id: str = Field(primary_key=True, default=None)
     movie_title: str
     user_email: str

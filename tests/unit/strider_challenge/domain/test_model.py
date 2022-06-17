@@ -93,3 +93,17 @@ def test_build_review():
 
     # assert
     assert output_review == target_review
+
+
+def test_stream_id_generation():
+    # act
+    stream = model.Stream(
+        movie_title="title",
+        user_email="email",
+        size_mb=256,
+        start_at=datetime.datetime.now(),
+        end_at=datetime.datetime.now(),
+    )
+
+    # act and assert
+    assert stream.id == "1916a9ad445f73d0b20638309ae1fad9fec452df"
