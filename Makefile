@@ -79,7 +79,7 @@ checks: style-check quality-check type-check
 ## fix stylistic errors with black and isort
 apply-style:
 	@python -m black --exclude="build/|buck-out/|dist/|_build/|pip/|\\.pip/|\.git/|\.hg/|\.mypy_cache/|\.tox/|\.venv/" .
-	@python -m isort -rc strider_challenge/ tests/
+	@python -m isort strider_challenge/ tests/
 
 .PHONY: package
 ## build strider_challenge package wheel
