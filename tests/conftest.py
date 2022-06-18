@@ -11,4 +11,3 @@ def in_memory_db():
 def session(in_memory_db):
     SQLModel.metadata.create_all(in_memory_db)
     yield Session(in_memory_db)
-    SQLModel.metadata.clear()
