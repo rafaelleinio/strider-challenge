@@ -25,7 +25,7 @@ def test_build_author():
         name="name",
         birth_date=datetime.datetime(2000, 1, 1),
         died_at=datetime.datetime(2022, 1, 1),
-        nationalities=["guianese-french"],
+        nationality="guianese-french",
     )
 
     # act

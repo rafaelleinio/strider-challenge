@@ -11,18 +11,21 @@ class Author(SQLModel, table=True):
     name: str = Field(primary_key=True)
     birth_date: datetime
     died_at: datetime | None = None
-    nationalities: list[str] = []
+    nationality: str
 
 
-def build_author(author_raw: raw.AuthorRaw) -> Author:
-    return Author(
-        name=author_raw.metadata.name,
-        birth_date=author_raw.metadata.birth_date,
-        died_at=author_raw.metadata.died_at,
-        nationalities=[
-            n.slug for n in author_raw.nationalities if n.slug not in ["", None]
-        ],
-    )
+def build_author(author_raw: raw.AuthorRaw) -> Author | None:
+    name = author_raw.metadata.name
+    if name:
+        return Author(
+            name=name,
+            birth_date=author_raw.metadata.birth_date,
+            died_at=author_raw.metadata.died_at,
+            nationality=[
+                n.slug for n in author_raw.nationalities if n.slug not in ["", None]
+            ].pop(),
+        )
+    return None
 
 
 class Book(SQLModel, table=True):

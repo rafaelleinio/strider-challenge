@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 
 class Metadata(BaseModel):
-    name: str
-    birth_date: datetime
+    name: str | None = None
+    birth_date: datetime | None = None
     died_at: datetime | None = None
 
 
