@@ -17,10 +17,10 @@ class AbstractRepository(abc.ABC):
         self._add(records)
 
     @abc.abstractmethod
-    def _get(self, reference: str) -> SQLModel:
+    def _get(self, reference: str) -> SQLModel | None:
         """Child class should implement get command logic."""
 
-    def get(self, reference: str) -> SQLModel:
+    def get(self, reference: str) -> SQLModel | None:
         return self._get(reference)
 
 
@@ -38,6 +38,6 @@ class SqlRepository(AbstractRepository):
             self.session.add(new_record)
         self.session.commit()
 
-    def _get(self, reference: str) -> SQLModel:
+    def _get(self, reference: str) -> SQLModel | None:
         statement = select(self.model).where(getattr(self.model, self.pk) == reference)
         return self.session.exec(statement).first()
