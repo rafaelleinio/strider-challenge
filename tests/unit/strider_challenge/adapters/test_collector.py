@@ -37,10 +37,10 @@ class TestCsvCollector:
         collector = adapters.CsvCollector(path=f"{PATH}/data.csv")
 
         # act
-        output = collector.collect(schema=MockModel)
+        output = collector._collect()
 
         # assert
-        assert output == DATA
+        assert output == [{k: str(v) for k, v in d.items()} for d in DATA]
 
 
 class TestJsonCollector:
@@ -49,7 +49,7 @@ class TestJsonCollector:
         collector = adapters.JsonCollector(path=f"{PATH}/data.json")
 
         # act
-        output = collector.collect(schema=MockModel)
+        output = collector._collect()
 
         # assert
         assert output == DATA
