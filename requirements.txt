@@ -1,6 +1,2 @@
-# serder
-marshmallow
-desert
-
 # ORM
 sqlmodel
