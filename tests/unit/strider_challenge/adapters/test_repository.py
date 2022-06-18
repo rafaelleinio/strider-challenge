@@ -8,17 +8,20 @@ class MockSqlModel(SQLModel, table=True):
     age: int
 
 
-TARGET = MockSqlModel(name="name", age=18)
-
-
 class TestSqlRepository:
     def test_add_and_get(self, session: Session):
         # arrange
-        repo = adapters.SqlRepository(session=session)
+        repo = adapters.SqlRepository(session=session, model=MockSqlModel)
+        input1 = MockSqlModel(name="1", age=18)
+        input2 = MockSqlModel(name="2", age=18)
+        input3 = MockSqlModel(name="1", age=19)
 
         # act
-        repo.add([TARGET])
-        output = repo.get(reference="name")
+        repo.add([input1])
+        repo.add([input2, input3])
+        output1 = repo.get(reference="1")
+        output2 = repo.get(reference="2")
 
         # assert
-        assert output == TARGET
+        assert output1 == input3
+        assert output2 == input2
