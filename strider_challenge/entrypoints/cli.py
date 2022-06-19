@@ -3,6 +3,10 @@ from pathlib import Path
 from typing import Optional
 
 import typer
+from sqlalchemy.future import Engine as _FutureEngine
+from sqlmodel import Session, SQLModel, create_engine
+
+from strider_challenge import service_layer
 
 app = typer.Typer()
 
@@ -11,9 +15,13 @@ def build_connection_string() -> str:
     return "sqlite:///database.db"
 
 
+def build_engine() -> _FutureEngine:
+    return create_engine(build_connection_string())
+
+
 @app.command()
 def init_db() -> None:
-    pass
+    SQLModel.metadata.create_all(build_engine())
 
 
 class ModelEnum(str, Enum):
@@ -25,9 +33,25 @@ class ModelEnum(str, Enum):
     review = "review"
 
 
+MODEL_ENUM_MAP = {
+    ModelEnum.movie: service_layer.load_movies,
+    ModelEnum.stream: service_layer.load_streams,
+    ModelEnum.user: service_layer.load_users,
+    ModelEnum.author: service_layer.load_authors,
+    ModelEnum.book: service_layer.load_books,
+    ModelEnum.review: service_layer.load_reviews,
+}
+
+
 class CollectorEnum(str, Enum):
     csv = "csv"
     json = "json"
+
+
+COLLECTOR_ENUM_MAP = {
+    CollectorEnum.csv: service_layer.adapters.CsvCollector,
+    CollectorEnum.json: service_layer.adapters.JsonCollector,
+}
 
 
 @app.command()
@@ -36,8 +60,11 @@ def load(
     collector: CollectorEnum = typer.Option(CollectorEnum.csv),
     config: Optional[Path] = typer.Option(None),
 ) -> None:
-    pass
+    with Session(build_engine()) as session:
+        service = MODEL_ENUM_MAP[model]
+        collector_cls = COLLECTOR_ENUM_MAP[collector]
+        service(collector=collector_cls(path=str(config)), session=session)
 
 
 if __name__ == "__main__":
-    app()
+    app()  # pragma: no cover

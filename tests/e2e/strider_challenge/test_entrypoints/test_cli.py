@@ -64,7 +64,7 @@ def test_app():
             "--collector",
             "json",
             "--config",
-            "data/vendor/authors.csv",
+            "data/vendor/authors.json",
         ],
     )
     assert result.exit_code == 0
@@ -78,7 +78,7 @@ def test_app():
             "--collector",
             "json",
             "--config",
-            "data/vendor/books.csv",
+            "data/vendor/books.json",
         ],
     )
     assert result.exit_code == 0
@@ -92,7 +92,7 @@ def test_app():
             "--collector",
             "json",
             "--config",
-            "data/vendor/reviews.csv",
+            "data/vendor/reviews.json",
         ],
     )
     assert result.exit_code == 0
