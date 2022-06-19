@@ -3,6 +3,7 @@ import pathlib
 import pytest
 
 from strider_challenge import adapters, service_layer
+from strider_challenge.adapters import SqlRepository
 from strider_challenge.domain import model
 
 DATA_FOLDER = (
@@ -60,3 +61,17 @@ def test_load(model_cls, service, collector, reference, session):
 
     # assert
     assert isinstance(repo.get(reference=reference), model_cls)
+
+
+def test__build_repo_error():
+    # act and assert
+    with pytest.raises(ValueError):
+        service_layer._build_repo(model_=model.Movie)
+
+
+def test__build_repo_with_session(session):
+    # act
+    output = service_layer._build_repo(model_=model.Movie, session=session)
+
+    # assert
+    isinstance(output, SqlRepository)
