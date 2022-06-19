@@ -3,6 +3,11 @@ from typing import Sequence, Type
 
 from sqlalchemy.inspection import inspect
 from sqlmodel import Session, SQLModel, select
+from sqlmodel.sql.expression import Select, SelectOfScalar
+
+# supress warnings 😔 from issue: https://github.com/tiangolo/sqlmodel/issues/189
+SelectOfScalar.inherit_cache = True  # type: ignore
+Select.inherit_cache = True  # type: ignore
 
 
 class AbstractRepository(abc.ABC):
