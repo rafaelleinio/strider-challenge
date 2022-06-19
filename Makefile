@@ -4,43 +4,62 @@ VERSION := $(shell grep __version__ strider_challenge/__metadata__.py | head -1 
 .PHONY: requirements-dev
 ## install development requirements
 requirements-dev:
-	@PYTHONPATH=. python -m pip install -U -r requirements.dev.txt
+	@python -m pip install -U -r requirements.dev.txt
 
 .PHONY: requirements-minimum
 ## install prod requirements
 requirements-minimum:
-	@PYTHONPATH=. python -m pip install -U -r requirements.txt
+	@python -m pip install -U -r requirements.txt
 
 .PHONY: requirements
 ## install requirements
 requirements: requirements-dev requirements-minimum
 
-.PHONY: tests
-## run unit tests with coverage report
-tests:
+.PHONY: tests-coverage
+## run unit and integration tests with coverage report
+tests-coverage:
 	@echo ""
 	@echo "Tests"
 	@echo "=========="
 	@echo ""
-	@python -m pytest -W ignore::DeprecationWarning --cov-config=.coveragerc --cov-report term --cov-report html:tests-cov --cov=strider_challenge --cov-fail-under=100 tests/
+	@python -m pytest --cov-report term --cov-report html:tests-cov --cov=strider_challenge --cov-fail-under=100 --ignore=tests/e2e tests/
 
 .PHONY: unit-tests
-## run unit tests with coverage report
+## run unit tests
 unit-tests:
 	@echo ""
 	@echo "Unit Tests"
 	@echo "=========="
 	@echo ""
-	@python -m pytest -W ignore::DeprecationWarning --cov-config=.coveragerc --cov-report term --cov=strider_challenge tests/unit
+	@python -m pytest tests/unit
 
 .PHONY: integration-tests
-## run integration tests with coverage report
+## run integration tests
 integration-tests:
 	@echo ""
 	@echo "Integration Tests"
 	@echo "================="
 	@echo ""
-	@python -m pytest -W ignore::DeprecationWarning --cov-config=.coveragerc --cov-report term -cov-report html:unit-tests-cov --cov=strider_challenge tests/integration
+	@python -m pytest tests/integration
+
+.PHONY: e2e-tests
+## run e2e tests with infrastructure on docker compose
+e2e-tests:
+	@echo ""
+	@echo "E2E Tests"
+	@echo "================="
+	@echo ""
+	@docker compose -f tests/e2e/docker-compose.yaml up --exit-code-from e2e --build e2e
+
+.PHONY: app
+## create db infra with docker compose
+app:
+	@docker compose -f tests/e2e/docker-compose.yaml run app bash
+
+.PHONY: teardown
+## teardown all infra on docker compose
+teardown:
+	@docker compose -f tests/e2e/docker-compose.yaml down
 
 .PHONY: style-check
 ## run code style checks with black
@@ -84,7 +103,7 @@ apply-style:
 .PHONY: package
 ## build strider_challenge package wheel
 package:
-	@PYTHONPATH=. python -m setup sdist bdist_wheel
+	@python -m setup sdist bdist_wheel
 
 .PHONY: version
 ## show version

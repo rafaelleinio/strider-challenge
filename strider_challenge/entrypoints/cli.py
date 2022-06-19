@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from pathlib import Path
 from typing import Optional
@@ -12,7 +13,7 @@ app = typer.Typer()
 
 
 def build_connection_string() -> str:
-    return "sqlite:///database.db"
+    return os.environ.get("DATABASE_URL", "sqlite:///database.db")
 
 
 def build_engine() -> _FutureEngine:
@@ -67,4 +68,4 @@ def load(
 
 
 if __name__ == "__main__":
-    app()  # pragma: no cover
+    app()

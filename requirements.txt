@@ -1,6 +1,9 @@
 # ORM
 sqlmodel
 
+# drivers
+pg8000
+
 # schema validation
 pydantic
 
