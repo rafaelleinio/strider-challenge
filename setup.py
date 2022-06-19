@@ -6,7 +6,9 @@ from setuptools import find_packages, setup
 
 about: Dict[str, str] = {}
 with open(
-    file=os.path.join("strider", "__metadata__.py"), mode="r", encoding="utf-8"
+    file=os.path.join("strider_challenge", "__metadata__.py"),
+    mode="r",
+    encoding="utf-8",
 ) as f:
     exec(f.read(), about)
 
@@ -29,4 +31,8 @@ setup(
     long_description=long_description,
     python_requires=">=3.7, <4",
     install_requires=requirements,
+    entry_points="""
+        [console_scripts]
+        scli=strider_challenge.entrypoints.cli:app
+    """,
 )
