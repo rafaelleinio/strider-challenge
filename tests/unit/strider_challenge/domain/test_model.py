@@ -101,9 +101,9 @@ def test_stream_id_generation():
         movie_title="title",
         user_email="email",
         size_mb=256,
-        start_at=datetime.datetime.now(),
-        end_at=datetime.datetime.now(),
+        start_at=datetime.datetime(2022, 1, 1),
+        end_at=datetime.datetime(2022, 1, 1),
     )
 
     # act and assert
-    assert stream.id == "1916a9ad445f73d0b20638309ae1fad9fec452df"
+    assert stream.id == "7bd49d0f438ed44e7ab2b1c30b8d78e5fc93e1f2"

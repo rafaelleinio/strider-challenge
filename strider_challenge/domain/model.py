@@ -89,8 +89,8 @@ class Stream(SQLModel, table=True):
     movie_title: str
     user_email: str
     size_mb: str
-    start_at: str
-    end_at: str
+    start_at: datetime
+    end_at: datetime
 
     def __init__(self, **data: Any):
         super().__init__(**data)

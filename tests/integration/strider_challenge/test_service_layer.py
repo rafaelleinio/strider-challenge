@@ -24,7 +24,7 @@ DATA_FOLDER = (
             model.Stream,
             service_layer.load_streams,
             adapters.CsvCollector(path=f"{DATA_FOLDER}/internal/streams.csv"),
-            "964c33065c01fc45c1a7ab04ad995802ea089c80",
+            "642af1ae6acfd3bded70b61d6389219102424c77",
         ),
         (
             model.User,

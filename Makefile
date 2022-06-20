@@ -49,7 +49,7 @@ e2e-tests:
 	@echo "E2E Tests"
 	@echo "================="
 	@echo ""
-	@docker compose -f tests/e2e/docker-compose.yaml up --exit-code-from e2e --build e2e
+	@docker compose -f tests/e2e/docker-compose.yaml up --build e2e
 
 .PHONY: app
 ## create db infra with docker compose
