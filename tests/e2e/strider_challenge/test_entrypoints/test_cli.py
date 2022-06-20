@@ -97,7 +97,7 @@ def test_app():
     )
     assert result.exit_code == 0
 
-    with Session(create_engine(cli.build_connection_string())) as session:
+    with Session(create_engine(cli._build_connection_string())) as session:
         counts = [
             session.query(model.Movie).count(),
             session.query(model.Stream).count(),

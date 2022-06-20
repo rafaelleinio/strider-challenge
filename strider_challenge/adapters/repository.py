@@ -11,6 +11,8 @@ Select.inherit_cache = True  # type: ignore
 
 
 class AbstractRepository(abc.ABC):
+    """Base abstract repository pattern adapter."""
+
     def __init__(self, model: Type[SQLModel]):
         self.model = model
 
@@ -19,6 +21,12 @@ class AbstractRepository(abc.ABC):
         """Child class should implement add command logic."""
 
     def add(self, records: Sequence[SQLModel]) -> None:
+        """Add records to the repository.
+
+        Args:
+            records: input records to add.
+
+        """
         self._add(records)
 
     @abc.abstractmethod
@@ -26,10 +34,21 @@ class AbstractRepository(abc.ABC):
         """Child class should implement get command logic."""
 
     def get(self, reference: str) -> SQLModel | None:
+        """Retrieve a specific record from repository.
+
+        Args:
+            reference: key to find the record.
+
+        Returns:
+            record for given key or None if not found.
+
+        """
         return self._get(reference)
 
 
 class SqlRepository(AbstractRepository):
+    """Repository adapter implementation from sql-based databases."""
+
     def __init__(self, model: Type[SQLModel], session: Session, pk: str | None = None):
         super().__init__(model)
         self.session = session

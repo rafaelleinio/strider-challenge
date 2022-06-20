@@ -12,20 +12,23 @@ from strider_challenge import service_layer
 app = typer.Typer()
 
 
-def build_connection_string() -> str:
+def _build_connection_string() -> str:
     return os.environ.get("DATABASE_URL", "sqlite:///database.db")
 
 
-def build_engine() -> _FutureEngine:
-    return create_engine(build_connection_string())
+def _build_engine() -> _FutureEngine:
+    return create_engine(_build_connection_string())
 
 
 @app.command()
 def init_db() -> None:
-    SQLModel.metadata.create_all(build_engine())
+    """Initialize the database with all models declared in domain."""
+    SQLModel.metadata.create_all(_build_engine())
 
 
 class ModelEnum(str, Enum):
+    """Possible choices for models."""
+
     movie = "movie"
     stream = "stream"
     user = "user"
@@ -45,6 +48,8 @@ MODEL_ENUM_MAP = {
 
 
 class CollectorEnum(str, Enum):
+    """Possible choice for collectors."""
+
     csv = "csv"
     json = "json"
 
@@ -61,7 +66,15 @@ def load(
     collector: CollectorEnum = typer.Option(CollectorEnum.csv),
     config: Optional[Path] = typer.Option(None),
 ) -> None:
-    with Session(build_engine()) as session:
+    """Extract, transform, and load records into a specific model repository.
+
+    Args:
+        model: what model to populate.
+        collector: what collector to use.
+        config: arg for the collector (path to file).
+
+    """
+    with Session(_build_engine()) as session:
         service = MODEL_ENUM_MAP[model]
         collector_cls = COLLECTOR_ENUM_MAP[collector]
         service(collector=collector_cls(path=str(config)), session=session)
