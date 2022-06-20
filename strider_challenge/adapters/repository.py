@@ -55,6 +55,12 @@ class SqlRepository(AbstractRepository):
         self.pk = pk or inspect(model).primary_key[0].name
 
     def _add(self, records: Sequence[SQLModel]) -> None:
+        """This method implements a upsert logic for the add query.
+
+        If the reference does not exist it creates for the first time. If already exist,
+        it will update the features.
+
+        """
         for record in records:
             new_record = self._get(reference=getattr(record, self.pk)) or record
             for key, value in record.dict().items():
